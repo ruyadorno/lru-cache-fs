@@ -43,7 +43,6 @@
   },
   "dependencies": {
     "env-paths": "^2.2.0",
-    "fs-minipass": "^2.0.0",
     "lru-cache": "^5.1.1"
   }
 }

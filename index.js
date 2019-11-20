@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const fsm = require("fs-minipass");
+const { readFileSync, writeFileSync } = require("fs");
 const LRUCache = require("lru-cache");
 const envPaths = require("env-paths");
 
@@ -21,27 +21,21 @@ class LRUCacheFS extends LRUCache {
 			(options.cwd && path.join(options.cwd, options.cacheName)) ||
 			envPaths(options.cacheName, { suffix: "nodejs" }).cache;
 
-		return new fsm.ReadStream(this[FILENAME]).collect()
-			.then(res => {
-				const parseResult = () => {
-					try {
-						return JSON.parse(res.toString());
-					} catch (e) {
-						return [];
-					}
-				};
-				this.load(parseResult());
-				return this;
-			})
-			.catch(err => {
-				return this
-			});
+		const loadCacheFile = () => {
+			try {
+				return JSON.parse(readFileSync(this[FILENAME]));
+			} catch (e) {
+				return [];
+			}
+		};
+
+		this.load(loadCacheFile());
+
+		return this;
 	}
 
-	set(key, value, maxAge) {
-		super.set(key, value, maxAge);
-		new fsm.WriteStreamSync(this[FILENAME]).end(JSON.stringify(this.dump()));
-		return true;
+	fsDump() {
+		writeFileSync(this[FILENAME], JSON.stringify(this.dump(), null, 2));
 	}
 }
 

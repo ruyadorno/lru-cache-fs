@@ -18,7 +18,8 @@ Retrieve cache:
 
 ```js
 const Cache = require('lru-cache-fs')
-const cache = await new Cache({
+
+const cache = new Cache({
 	max: 100,
 	cacheName: "cache" // filename ref to be used
 });
@@ -31,6 +32,12 @@ Then retrieve/set items using:
 ```js
 cache.get('some-item') // returns whatever was stored
 cache.set('some-new-item', 'foo') // sets new item and stores cache sync to fs
+```
+
+The `fsDump()` method exposes an API that allows you to persist the current cache on your file system:
+
+```js
+cache.fsDump()
 ```
 
 All other methods from [lru-cache](https://www.npmjs.com/package/lru-cache) should be available, e.g:

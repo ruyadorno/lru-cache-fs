@@ -9,7 +9,7 @@ exports[`test.js TAP cache file missing > should have an empty cache 1`] = `
 Array []
 `
 
-exports[`test.js TAP write more than max > should add new item while removing lru from existing cache 1`] = `
+exports[`test.js TAP set more than max > should add new item while removing lru from existing cache 1`] = `
 Array [
   Object {
     "e": 0,
@@ -29,7 +29,35 @@ Array [
 ]
 `
 
-exports[`test.js TAP write to existing cache > should add new item to existing cache 1`] = `
+exports[`test.js TAP set to existing cache > should add new item to existing cache 1`] = `
+Array [
+  Object {
+    "e": 0,
+    "k": "third-item",
+    "v": Object {
+      "foo": "bar",
+    },
+  },
+  Object {
+    "e": 0,
+    "k": "second-item",
+    "v": Array [
+      "foo",
+      "echo",
+    ],
+  },
+  Object {
+    "e": 0,
+    "k": "first-item",
+    "v": Array [
+      "foo",
+      "bar",
+    ],
+  },
+]
+`
+
+exports[`test.js TAP write cache to fs on fsDump > should have cache data containing both old items and new one 1`] = `
 Array [
   Object {
     "e": 0,

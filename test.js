@@ -1,3 +1,6 @@
+const { readFileSync } = require("fs");
+const path = require("path");
+
 const { test } = require("tap");
 const requireInject = require("require-inject");
 
@@ -14,11 +17,11 @@ test("no cacheName provided", t => {
 	t.end();
 });
 
-test("retrieve missing cache", async t => {
+test("retrieve missing cache", t => {
 	const cwd = t.testdir({
 		cache: ""
 	});
-	const cache = await new Cache({
+	const cache = new Cache({
 		max: 100,
 		cacheName: "cache",
 		cwd
@@ -31,25 +34,22 @@ test("retrieve missing cache", async t => {
 	t.end();
 });
 
-test("cache file missing", async t => {
-	const cache = await new Cache({
+test("cache file missing", t => {
+	const cache = new Cache({
 		max: 100,
 		cacheName: "cache",
 		cwd: __dirname
 	});
-	t.matchSnapshot(
-		cache.dump(),
-		"should have an empty cache"
-	);
+	t.matchSnapshot(cache.dump(), "should have an empty cache");
 	t.end();
 });
 
-test("retrieve existing cache", async t => {
+test("retrieve existing cache", t => {
 	const cwd = t.testdir({
 		cache:
 			'[{"k":"second-item","v":["foo","echo"],"e":0},{"k":"first-item","v":["foo","bar"],"e":0}]'
 	});
-	const cache = await new Cache({
+	const cache = new Cache({
 		max: 100,
 		cacheName: "cache",
 		cwd
@@ -67,12 +67,12 @@ test("retrieve existing cache", async t => {
 	t.end();
 });
 
-test("write to existing cache", async t => {
+test("set to existing cache", t => {
 	const cwd = t.testdir({
 		cache:
 			'[{"k":"second-item","v":["foo","echo"],"e":0},{"k":"first-item","v":["foo","bar"],"e":0}]'
 	});
-	const cache = await new Cache({
+	const cache = new Cache({
 		max: 100,
 		cacheName: "cache",
 		cwd
@@ -82,12 +82,12 @@ test("write to existing cache", async t => {
 	t.end();
 });
 
-test("write more than max", async t => {
+test("set more than max", t => {
 	const cwd = t.testdir({
 		cache:
 			'[{"k":"second-item","v":["foo","echo"],"e":0},{"k":"first-item","v":["foo","bar"],"e":0}]'
 	});
-	const cache = await new Cache({
+	const cache = new Cache({
 		max: 2,
 		cacheName: "cache",
 		cwd
@@ -110,15 +110,35 @@ test("default cwd", t => {
 				cache: "/foo"
 			};
 		},
-		"fs-minipass": {
-			ReadStream: class {
-				collect() {
-					return Promise.resolve("[]");
-				}
-			}
+		fs: {
+			readFileSync: () => []
 		}
 	});
 	new LRUCacheFS({
 		cacheName: "foo"
 	});
+});
+
+test("write cache to fs on fsDump", t => {
+	const cwd = t.testdir({
+		cache:
+			'[{"k":"second-item","v":["foo","echo"],"e":0},{"k":"first-item","v":["foo","bar"],"e":0}]'
+	});
+	const cache = new Cache({
+		cacheName: "cache",
+		cwd
+	});
+	cache.set("third-item", { foo: "bar" });
+
+	// dump to fs
+	cache.fsDump();
+
+	// read cache file manually
+	const cacheFile = readFileSync(path.join(cwd, "cache"), "utf8");
+
+	t.matchSnapshot(
+		JSON.parse(cacheFile.toString()),
+		"should have cache data containing both old items and new one"
+	);
+	t.end();
 });
