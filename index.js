@@ -21,17 +21,21 @@ class LRUCacheFS extends LRUCache {
 			(options.cwd && path.join(options.cwd, options.cacheName)) ||
 			envPaths(options.cacheName, { suffix: "nodejs" }).cache;
 
-		return new fsm.ReadStream(this[FILENAME]).collect().then(res => {
-			const parseResult = () => {
-				try {
-					return JSON.parse(res.toString());
-				} catch (e) {
-					return [];
-				}
-			};
-			this.load(parseResult());
-			return this;
-		});
+		return new fsm.ReadStream(this[FILENAME]).collect()
+			.then(res => {
+				const parseResult = () => {
+					try {
+						return JSON.parse(res.toString());
+					} catch (e) {
+						return [];
+					}
+				};
+				this.load(parseResult());
+				return this;
+			})
+			.catch(err => {
+				return this
+			});
 	}
 
 	set(key, value, maxAge) {

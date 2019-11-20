@@ -5,6 +5,10 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`test.js TAP cache file missing > should have an empty cache 1`] = `
+Array []
+`
+
 exports[`test.js TAP write more than max > should add new item while removing lru from existing cache 1`] = `
 Array [
   Object {

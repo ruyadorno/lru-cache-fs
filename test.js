@@ -31,6 +31,19 @@ test("retrieve missing cache", async t => {
 	t.end();
 });
 
+test("cache file missing", async t => {
+	const cache = await new Cache({
+		max: 100,
+		cacheName: "cache",
+		cwd: __dirname
+	});
+	t.matchSnapshot(
+		cache.dump(),
+		"should have an empty cache"
+	);
+	t.end();
+});
+
 test("retrieve existing cache", async t => {
 	const cwd = t.testdir({
 		cache:
