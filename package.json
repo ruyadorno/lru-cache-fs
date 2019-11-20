@@ -1,0 +1,49 @@
+{
+  "name": "lru-cache-fs",
+  "version": "1.0.0",
+  "description": "Extends lru-cache to add file system support",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap",
+    "snap": "tap",
+    "preversion": "npm test"
+  },
+  "files": [
+    "index.js"
+  ],
+  "engine": {
+    "node": ">=10"
+  },
+  "author": {
+    "name": "Ruy Adorno",
+    "twitter": "ruyadorno",
+    "url": "http://ruyadorno.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruyadorno/lru-cache-fs.git"
+  },
+  "bugs": "https://github.com/ruyadorno/lru-cache-fs/issues",
+  "license": "MIT",
+  "keywords": [
+    "cache",
+    "lru-cache",
+    "env-paths",
+    "fs"
+  ],
+  "tap": {
+    "100": true
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.7.0",
+    "prettier": "^1.19.1",
+    "require-inject": "^1.4.4",
+    "tap": "^14.9.2"
+  },
+  "dependencies": {
+    "env-paths": "^2.2.0",
+    "fs-minipass": "^2.0.0",
+    "lru-cache": "^5.1.1"
+  }
+}
