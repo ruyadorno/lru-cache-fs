@@ -23,7 +23,8 @@ class LRUCacheFS extends LRUCache {
 
 		const loadCacheFile = () => {
 			try {
-				return JSON.parse(readFileSync(this[FILENAME]));
+				const file = readFileSync(this[FILENAME], 'utf8')
+				return JSON.parse(file.toString());
 			} catch (e) {
 				return [];
 			}
